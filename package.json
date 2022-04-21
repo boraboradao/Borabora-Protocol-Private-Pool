@@ -1,0 +1,28 @@
+{
+  "name": "BoraboraV1",
+  "version": "1.0.0",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.4.1",
+    "@openzeppelin/test-environment": "^0.1.9",
+    "@openzeppelin/test-helpers": "^0.5.11",
+    "@truffle/contract": "^4.3.10",
+    "@truffle/hdwallet-provider": "^1.2.3",
+    "ethers": "^5.0.32",
+    "mathjs": "^9.3.0",
+    "mocha": "^9.0.2",
+    "mocha-chai-jest-snapshot": "^1.1.2",
+    "solc": "^0.8.0",
+    "truffle-contract-size": "^2.0.1",
+    "truffle-plugin-verify": "^0.5.11"
+  },
+  "scripts": {
+    "build": "truffle compile",
+    "deploy:bsc": "truffle mirgate --network bsc",
+    "deploy:rinkeby": "truffle mirgate --network rinkeby",
+    "deploy:bsctest": "truffle mirgate --network bsctest",
+    "test": "mocha --timeout=150000 --exit --recursive",
+    "robot": "node ./test/robot.js",
+    "abi": "node ./gen-abi.js",
+    "address": "node ./address-gen.js"
+  }
+}
