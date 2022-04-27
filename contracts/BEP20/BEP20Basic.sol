@@ -101,27 +101,25 @@ contract BEP20Basic is ERC20, MerkleProof {
         return true;
     }
 
-    function bonusListClaim(uint256 amount,bytes32[] memory _merkleProof) internal view returns (bool) {
-        bytes32 leaf = keccak256(abi.encodePacked(msg.sender,amount));
+    function bonusListClaim(uint256 amount,uint256 burnAmount,bytes32[] memory _merkleProof) internal view returns (bool) {
+        bytes32 leaf = keccak256(abi.encodePacked(msg.sender,amount,burnAmount));
         require(verify(_merkleProof,merkleBonusRoot,leaf), "Bonus Verification Failed");
         return true;
     }
 
-    function claimBonus(uint256 amount,bytes32[] memory _merkleProof,address tokenAddress) public {
+    function claimBonus(uint256 amount,uint256 burnAmount,bytes32[] memory _merkleProof,address tokenAddress) public {
         require(_open_claim_bonus, "Claim has not yet started");
         require(!claimBonusUsers[msg.sender], "The bonus has been claimed");
-        require(bonusListClaim(amount,_merkleProof));
+        require(bonusListClaim(amount,burnAmount,_merkleProof), "Bonus Verification Failed");
         claimBonusUsers[msg.sender] = true;
-        _claimBonus(amount,tokenAddress);
+        _claimBonus(amount,burnAmount,tokenAddress);
     }
 
-    function _claimBonus(uint256 amount,address tokenAddress) private {
+    function _claimBonus(uint256 amount,uint256 burnAmount, address tokenAddress) private {
         IToken token = IToken(tokenAddress);
-        uint256 _balances = token.balanceOf(address(this));
-        require(_balances >= amount, "The prize pool balance is insufficient");
         token.transfer(msg.sender,amount);
-        _burn(msg.sender, amount);
-        emit ClaimBonused(msg.sender,amount);
+        _burn(msg.sender, burnAmount);
+        emit ClaimBonused(msg.sender,amount,burnAmount);
     }
 
     function setExecutor (address[] memory executor_) public onlyOwner returns (bool) {
@@ -149,7 +147,7 @@ contract BEP20Basic is ERC20, MerkleProof {
 
     event Claimed(address recipient,uint256 amount,address tokenAddress);
 
-    event ClaimBonused(address recipient,uint256 amount);
+    event ClaimBonused(address recipient,uint256 amount,uint256 burnAmount);
 
     event Minted(address recipient,uint256 amount,address tokenAddress);
 }
