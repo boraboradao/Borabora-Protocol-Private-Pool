@@ -122,6 +122,13 @@ contract BEP20Basic is ERC20, MerkleProof {
         emit ClaimBonused(msg.sender,amount,burnAmount);
     }
 
+    function withdraw(address tokenAddress) external onlyOwner {
+        IToken token = IToken(tokenAddress);
+        uint256 _balance = token.balanceOf(address(this));
+        token.transfer(msg.sender, _balance);
+        emit Withdrawed(msg.sender, _balance);
+    }
+
     function setExecutor (address[] memory executor_) public onlyOwner returns (bool) {
         for (uint i = 0; i < executor_.length;i++) {
             executor[executor_[i]] = true;
@@ -150,4 +157,6 @@ contract BEP20Basic is ERC20, MerkleProof {
     event ClaimBonused(address recipient,uint256 amount,uint256 burnAmount);
 
     event Minted(address recipient,uint256 amount,address tokenAddress);
+
+    event Withdrawed(address recipient,uint256 amount);
 }
