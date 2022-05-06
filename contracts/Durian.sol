@@ -33,9 +33,9 @@ contract Durian is BEP20Basic {
         require(token_banana_balance >= banana_amount, "Insufficient Banana Token");
         require(token_coconut_balance >= coconut_amount, "Insufficient Coconut Token");
 
-        tokenApple.transferFrom(msg.sender, address(this), apple_amount);
-        tokenBanana.transferFrom(msg.sender, address(this), banana_amount);
-        tokenCoconut.transferFrom(msg.sender, address(this), coconut_amount);
+        require(tokenApple.transferFrom(msg.sender, address(this), apple_amount), "transferFrom Apple Failed");
+        require(tokenBanana.transferFrom(msg.sender, address(this), banana_amount), "transferFrom Banana Failed");
+        require(tokenCoconut.transferFrom(msg.sender, address(this), coconut_amount), "transferFrom Coconut Failed");
 
         tokenApple.burn(apple_amount);
         tokenBanana.burn(banana_amount);

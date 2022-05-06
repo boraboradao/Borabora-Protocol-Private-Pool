@@ -65,6 +65,7 @@ contract BEP20Basic is ERC20, MerkleProof {
     }
 
     function transferOwner(address owner_) external onlyOwner returns (bool){
+        require(owner_ != address(0x0), "owner address 0x0");
         owner = owner_;
         return true;
     }

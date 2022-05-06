@@ -37,8 +37,8 @@ contract Coconut is BEP20Basic {
     function _claim (uint256 amount,address tokenAddress) private {
         IToken ItokenCoc = IToken(tokenAddress);
         uint256 token_balances = ItokenCoc.balanceOf(msg.sender);
-        require(token_balances > 0, "Insufficient Balance");
-        ItokenCoc.transferFrom(msg.sender, address(this), amount);
+        require(token_balances >= amount, "Insufficient Balance");
+        ItokenCoc.transferFrom(msg.sender, address(this), amount); 
         claimedUser[msg.sender] = true;
         _mint(msg.sender, MINT_TOTAL_MAX);
         emit Claimed(msg.sender, MINT_TOTAL_MAX, address(this));
